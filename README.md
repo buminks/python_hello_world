@@ -84,10 +84,29 @@ Optional job environment variable:
 
 Agents need **Python 3.10+**, **git**, and **`jf`** (JFrog CLI v2) on `PATH` for scan/publish stages.
 
+### Static analysis stages
+
+The scripted pipeline runs separate stages (logs archived, **Warnings NG** `recordIssues` in *Analysis Report*):
+
+| Stage | Tool |
+|-------|------|
+| isort | import order |
+| flake8 | style / pyflakes |
+| pylint | lint |
+| ruff | fast lint |
+| mypy | type check |
+| bandit | security |
+| Analysis Report | `recordIssues` + fail on non-zero tool exit |
+| Test | `pytest` + Cobertura (`coverage.xml`) |
+
+Requires Jenkins plugins: **Warnings NG** (`recordIssues`), **Code Coverage** (`recordCoverage`), **JUnit**.
+
+Local equivalent: `./scripts/analyse.sh` (all tools) or `./scripts/analyse.sh pylint flake8`.
+
 ### Pipeline behavior
 
-| Build type | Lint / test / build | `jf scan` | `jf rt upload` |
-|------------|---------------------|-----------|----------------|
+| Build type | Analysis / test / build | `jf scan` | `jf rt upload` |
+|------------|-------------------------|-----------|----------------|
 | Pull request | yes | yes (if `jf` present) | no |
 | Feature branch | yes | yes | no |
 | `main` | yes | yes | yes |

@@ -11,7 +11,11 @@ venv/
 .pytest_cache/
 .ruff_cache/
 .coverage
+coverage.xml
 htmlcov/
+*.log
+*.exit
+pytest-results.xml
 
 # setuptools-scm generated at build time
 src/hello_world/_version.py

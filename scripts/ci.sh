@@ -17,11 +17,11 @@ source "$VENV/bin/activate"
 python -m pip install --upgrade pip
 pip install -e ".[dev]"
 
-echo "==> Lint"
-ruff check src tests
+echo "==> Static analysis"
+./scripts/analyse.sh
 
 echo "==> Test"
-pytest -v
+pytest -v --cov=hello_world --cov-report=term --cov-report=xml
 
 echo "==> Build"
 python -m build
