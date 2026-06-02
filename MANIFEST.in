@@ -1,0 +1,5 @@
+include README.md
+graft src/hello_world
+prune tests
+prune scripts
+prune .github
