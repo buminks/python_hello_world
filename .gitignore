@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# setuptools-scm generated at build time
+src/hello_world/_version.py
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
