@@ -98,7 +98,7 @@ timestamps {
                 enabledForFailure: true,
                 sourceCodeRetention: 'LAST_BUILD',
                 qualityGates: [[
-                    criticality: 'HIGH',
+                    criticality: 'FAILURE',
                     integerThreshold: 1,
                     threshold: 1.0,
                     type: 'TOTAL',
