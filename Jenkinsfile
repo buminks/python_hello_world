@@ -125,10 +125,6 @@ timestamps {
                 """
             } finally {
                 junit allowEmptyResults: true, testResults: 'pytest-results.xml'
-                recordCoverage(
-                    tools: [[parser: 'COBERTURA', pattern: 'coverage.xml']],
-                    sourceCodeRetention: 'LAST_BUILD',
-                )
             }
         }
 
