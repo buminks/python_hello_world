@@ -1,10 +1,10 @@
 properties([
     buildDiscarder(logRotator(numToKeepStr: '30')),
-    timestamps(),
-    timeout(time: 45, unit: 'MINUTES'),
 ])
 
-node {
+timestamps {
+    timeout(time: 45, unit: 'MINUTES') {
+        node {
     def python = 'python3'
     def venv = "${WORKSPACE}/.venv"
     def venvActivate = ". '${venv}/bin/activate'"
@@ -190,5 +190,7 @@ node {
         '''.trim().replaceAll('\\s+', ''), allowEmptyArchive: true
     } finally {
         cleanWs(deleteDirs: true, patterns: [[pattern: '.venv', type: 'INCLUDE']])
+    }
+    }
     }
 }
