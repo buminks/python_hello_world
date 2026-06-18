@@ -139,20 +139,31 @@ Optional job environment variable:
 
 Agents need **Python 3.10+**, **git**, and **`jf`** (JFrog CLI v2) on `PATH` for scan/publish stages.
 
-### Static analysis stages
+### Pipeline stages
 
-The scripted pipeline runs separate stages (logs archived, **Warnings NG** `recordIssues` in *Analysis Report*):
+The scripted pipeline groups work into these top-level stages:
 
-| Stage | Tool |
-|-------|------|
+| Stage | Contents |
+|-------|----------|
+| **Prepare** | Checkout (full git history + tags), Python venv, `pip install -e '.[dev]'` |
+| **Static Code Analysis** | isort, flake8, pylint, ruff, mypy, bandit (in parallel), then *Analysis Report* |
+| **Test** | `pytest` + Cobertura (`coverage.xml`) + JUnit |
+| **Build** | `python -m build`, CLI smoke tests, write `version.txt` |
+| **Release** | Xray scan (`jf scan`), Artifactory publish (conditional) |
+| **Archive** | `dist/*`, logs, coverage, test results |
+
+Static analysis tools (run in parallel inside *Static Code Analysis*):
+
+| Tool | Purpose |
+|------|---------|
 | isort | import order |
 | flake8 | style / pyflakes |
 | pylint | lint |
 | ruff | fast lint |
 | mypy | type check |
 | bandit | security |
-| Analysis Report | `recordIssues` + fail on non-zero tool exit |
-| Test | `pytest` + Cobertura (`coverage.xml`) |
+
+*Analysis Report* runs `recordIssues` (Warnings NG) and fails the build if any tool exited non-zero.
 
 Requires Jenkins plugins: **Warnings NG** (`recordIssues`), **Code Coverage** (`recordCoverage`), **JUnit**.
 
