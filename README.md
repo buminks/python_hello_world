@@ -2,6 +2,11 @@
 
 Reference Python package demonstrating CI/CD with **GitHub** (PRs), **Jenkins**, **Artifactory**, and **JFrog Xray**.
 
+The application is a small CLI with two subcommands:
+
+- **`greet`** — personalized greetings (casual or formal)
+- **`stats`** — text statistics rendered as a Rich table
+
 Versioning uses [setuptools-scm](https://github.com/pypa/setuptools-scm) from git tags (`v1.0.0` → `1.0.0`). CI is **Jenkins-only** (no GitHub Actions workflows).
 
 ## Quick start
@@ -11,7 +16,10 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 pytest
-hello-world
+hello-world greet
+hello-world greet --name Alice --style formal
+hello-world stats "Hello, CI/CD demo!"
+hello-world stats --file README.md
 python -m build
 ```
 
@@ -30,6 +38,53 @@ export JF_ACCESS_TOKEN="***"
 jf scan dist/ --fail          # after ./scripts/ci.sh build, or:
 CI_PUBLISH=true BUILD_NUMBER=1 ./scripts/ci.sh
 ```
+
+## Application
+
+### CLI commands
+
+| Command | Description |
+|---------|-------------|
+| `hello-world greet` | Casual greeting (`Hello, World!`) |
+| `hello-world greet --name Alice --style formal` | Formal greeting |
+| `hello-world stats "some text"` | Word/line/char stats as a table |
+| `hello-world stats --file path/to/file` | Stats from a file |
+| `hello-world --version` | Package version |
+
+### Architecture
+
+```mermaid
+flowchart LR
+  subgraph cli [cli.py]
+    greetCmd[greet]
+    statsCmd[stats]
+  end
+  subgraph core [package modules]
+    greetings[greetings.py]
+    textStats[text_stats.py]
+    models[models.py]
+  end
+  greetCmd --> greetings
+  statsCmd --> textStats
+  textStats --> models
+  statsCmd --> richLib[rich]
+```
+
+| Module | Role |
+|--------|------|
+| `models.py` | `GreetingStyle` enum, `TextStats` dataclass |
+| `greetings.py` | `format_greeting()` |
+| `text_stats.py` | `analyze_text()` |
+| `cli.py` | argparse subcommands and Rich table output |
+
+### Dependencies
+
+| Kind | Packages |
+|------|----------|
+| Runtime | `rich` (formatted CLI output) |
+| Dev (`pip install -e ".[dev]"`) | pytest, mypy, ruff, pylint, bandit, build, … |
+
+The runtime dependency gives JFrog Xray a real third-party package to scan in built wheels.
 
 ## Versioning and releases
 
@@ -138,6 +193,10 @@ Build info: `hello-world` / `${BUILD_NUMBER}` via `jf rt build-publish`.
 ├── Jenkinsfile
 ├── pyproject.toml
 ├── src/hello_world/
+│   ├── cli.py
+│   ├── greetings.py
+│   ├── models.py
+│   └── text_stats.py
 ├── tests/
 └── scripts/ci.sh
 ```

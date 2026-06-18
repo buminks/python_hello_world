@@ -26,6 +26,8 @@ pytest -v --cov=hello_world --cov-report=term --cov-report=xml
 echo "==> Build"
 python -m build
 python -m hello_world --version 2>/dev/null || hello-world --version
+hello-world greet --name CI
+hello-world stats "demo"
 
 VERSION="$(python -c "from hello_world import __version__; print(__version__)")"
 echo "Package version: ${VERSION}"

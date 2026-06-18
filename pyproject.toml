@@ -5,9 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "hello-world"
 dynamic = ["version"]
-description = "Hello World reference package for CI/CD (Jenkins, Artifactory, Xray)"
+description = "Greeting and text-stats CLI demo for CI/CD (Jenkins, Artifactory, Xray)"
 readme = "README.md"
 requires-python = ">=3.10"
+dependencies = [
+    "rich>=13",
+]
 license = "MIT"
 authors = [{name = "CI/CD Reference"}]
 classifiers = [

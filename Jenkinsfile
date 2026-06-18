@@ -134,6 +134,8 @@ timestamps {
                 ${venvActivate}
                 python -m build
                 hello-world --version
+                hello-world greet --name CI
+                hello-world stats "demo"
                 python -c 'from hello_world import __version__; print(__version__)' > version.txt
             """
             env.PACKAGE_VERSION = readFile('version.txt').trim()
